@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, String,DateTime  #add all primary types that are going to be used
-from database import db
-import datetime
+from database import *
+from datetime import datetime
 
 class Task(db.Model):
     __tablename__ = 'tasks'
@@ -8,7 +8,7 @@ class Task(db.Model):
     task_name = db.Column(String(150), nullable=False)
     id_task_status = db.Column(Integer, ForeignKey('task_statuses.id_task_status'))
     description = db.relationship('TaskStatus', backref=db.backref('task status per task'))
-    created_date = Column(DateTime, default=datetime.datetime.utcnow)
+    created_date = Column(DateTime, default = datetime.utcnow)
     owner = db.Column(Integer,ForeignKey('users.id_user'))
     due_date = db.Column(DateTime)
 
