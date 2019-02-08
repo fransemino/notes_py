@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, Password #add all primary types that are going to be used
+from sqlalchemy import Integer, DateTime, String
 from database import db
-from passlib.apps import custom_app_context as pwd_context
 
 
 
@@ -14,11 +13,5 @@ class User(db.Model):
     birthday = db.Column(DateTime,nullable=False)
 
 
-    def __init__(self):
-
-
-    def hash_password(self, password):
-        self.password_hash = pwd_context.encrypt(password)
-
-    def verify_password(self, password):
-        return pwd_context.verify(password, self.password_hash)
+    def __setattr__(self, att, value):
+        self.__dict__[att] = value

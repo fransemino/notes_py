@@ -10,4 +10,9 @@ class TaskSchema(Schema):
     task_name = fields.String()
     id_task_status = fields.Integer()
     task_status = fields.Nested(TaskStatusSchema())
-    #add needed fields
+
+class UserSchema(Schema):
+    name = fields.String()
+    lastname = fields.String()
+    username = fields.String()
+    birthday = fields.DateTime()

@@ -11,12 +11,14 @@ class Task(db.Model):
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     owner = db.Column(Integer,ForeignKey('users.id_user'))
     due_date = db.Column(DateTime)
-    #add needed fields
 
-    def __init__(self, task_name=None, id_task_status=1,id_user):
+    def __init__(self, task_name=None, id_task_status=1,id_user=0):
         self.task_name = task_name
         self.id_task_status = id_task_status
         self.owner = id_user
+
+    def __setattr__(self, att, value):
+        self.__dict__[att] = value
 
 class TaskStatus(db.Model):
     __tablename__ = 'task_statuses'
