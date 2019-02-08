@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 app = create_app()
 
-prefix = '/api/v1'
+prefix = '/api/'
 #register views
 TasksView.register(app, route_prefix=prefix)
 

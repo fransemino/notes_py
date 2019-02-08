@@ -1,16 +1,23 @@
 from flask_classy import FlaskView
 from flask import jsonify
-from schemas import *
+from schemas import TaskSchema, TaskStatusSchema
+from models import Task,TaskStatus
 from utils import *
+from database import db
 #from sqlalchemy import or_
 from datetime import datetime
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, InternalServerError
+from flask_httpauth import HTTPBasicAuth
+
+
+auth = HTTPBasicAuth()
 
 
 class TasksView(FlaskView):
     task_schema = TaskSchema()
     status_schema = TaskStatusSchema()
 
+    @auth.login_required
     def index(self):
         #authorization()
         tasks = Task.query.all()
