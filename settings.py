@@ -2,7 +2,7 @@ import os
 
 class DBSettings:
     #add db information
-    DB_ENGINE = "mysql+pymysql"
+    DB_ENGINE = "postgresql"
     DB_HOST = os.getenv("RDS_HOSTNAME","ec2-107-20-183-142.compute-1.amazonaws.com")
     DB_NAME = os.getenv("RDS_DB_NAME","d72gp2o1uakrnr")
     DB_PORT = os.getenv("RDS_PORT","5432")
