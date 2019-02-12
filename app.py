@@ -25,4 +25,4 @@ if __name__ == '__main__':
     with app.app_context():
         CORS(app)
         db.create_all()
-        app.run(host='https://notespy.herokuapp.com/', debug=True)
+        app.run(host='localhost', debug=True)
