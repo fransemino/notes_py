@@ -1,6 +1,6 @@
 from flask_classy import FlaskView
 from flask import jsonify
-from sqlalchemy import DateTime
+from sqlalchemy import Date
 from schemas import *
 from werkzeug.exceptions import BadRequest, InternalServerError
 from utils import *
@@ -8,21 +8,16 @@ from models import *
 from database import *
 
 
-
 class UserView(FlaskView):
+    user_schema = UserSchema()
 
-    user_schema = TaskSchema()
-
-    def index(self):
-        return 0
 
     def get(self):
         user = authorization()
         if user == 0:
             raise BadRequest('login please')
         else:
-            response = User.query.filter(User.id_user == user.id_user).first()
-            user_data = self.user_schema.dump(response).data
+            user_data = self.user_schema.dump(user).data
             return jsonify({'user': user_data})
 
     def post(self):
@@ -33,14 +28,14 @@ class UserView(FlaskView):
         birthday = request.json.get('birthday')
         if username is None or password is None or name is None or lastname is None or birthday is None:
             raise BadRequest('Missing Information')
-        if User.query.filter_by(username == username).first() is not None:
+        if User.query.filter(User.username == username).first() is not None:
             raise BadRequest('Username already taken')
         user = User()
         user.username = username
         user.password = password
         user.name = name
         user.lastname = lastname
-        user.birthday = DateTime(birthday)
+        user.birthday = birthday
         try:
             db.session.add(user)
             db.session.commit()
@@ -50,7 +45,7 @@ class UserView(FlaskView):
         user_data = self.user_schema.dump(user).data
         return jsonify({'user': user_data})
 
-    def post(self):
+    def put(self):
         user = authorization()
         if user == 0:
             raise BadRequest('login please')
@@ -60,28 +55,35 @@ class UserView(FlaskView):
             name = request.json.get('name')
             lastname = request.json.get('lastname')
             birthday = request.json.get('birthday')
-            user_to_update = User.query.filter(User.id_user == user.id_user).first
-            user_to_update.username = username
-            user_to_update.password = password
-            user_to_update.name = name
-            user_to_update.lastname = lastname
-            user_to_update.birthday = DateTime(birthday)
+            user_instance = User()
+            user_instance.id_user=user.id_user
+            if username is not None :
+                user_instance.username = username
+            if password is not None:
+                user_instance.password=password
+            if name is not None:
+                user_instance.name = name
+            if lastname is not None:
+                user_instance.lastname = lastname
+            if birthday is not None:
+                user_instance.birthday = birthday
             try:
-                db.session.merge(user_to_update)
+                db.session.merge(user_instance)
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
-                raise InternalServerError('Task not modified')
-            user_data = self.user_schema.dump(user_to_update).data
-            return jsonify({'task': user_data})
+                raise InternalServerError('user not modified')
+            user_data = self.user_schema.dump(user).data
+            return jsonify({'user': user_data})
         return
 
     def delete(self):
         user = authorization()
-        user_to_delete = User.query.filter(User.id_user == user.id_user).first
+        if user == 0 :
+            raise BadRequest('login please')
         try:
-            db.session.delete(user_to_delete)
+            db.session.delete(user)
             db.session.commit()
         except Exception as e:
-            return jsonify({'result': False})
+            raise InternalServerError('user not deleted')
         return jsonify({'result': True})

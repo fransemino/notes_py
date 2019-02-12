@@ -3,13 +3,12 @@ from database import create_app, db
 from flask_cors import CORS
 from models import *
 
-
 app = create_app()
 
-prefix = '/api/task'
+prefix = '/api/v1'
 TasksView.register(app, route_prefix=prefix)
-prefix='/api/user'
 UserView.register(app, route_prefix=prefix)
+TaskStatusView.register(app, route_prefix = prefix)
 
 
 @app.teardown_appcontext
@@ -26,4 +25,4 @@ if __name__ == '__main__':
     with app.app_context():
         CORS(app)
         db.create_all()
-        app.run(host='0.0.0.0', debug=True)
+        app.run(host='localhost', debug=True)

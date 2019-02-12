@@ -7,15 +7,10 @@ class Task(db.Model):
     id_task = db.Column(Integer, primary_key=True)
     task_name = db.Column(String(150), nullable=False)
     id_task_status = db.Column(Integer, ForeignKey('task_statuses.id_task_status'))
-    description = db.relationship('TaskStatus', backref=db.backref('task status per task'))
-    created_date = Column(DateTime, default = datetime.utcnow)
-    owner = db.Column(Integer,ForeignKey('users.id_user'))
+    description = db.relationship('TaskStatus', backref=db.backref('task_statuses'), cascade="merge" )
+    created_date = Column(DateTime, default=datetime.utcnow)
+    owner = db.Column(Integer, ForeignKey('users.id_user'))
     due_date = db.Column(DateTime)
-
-    def __init__(self, task_name=None, id_task_status=1,id_user=0):
-        self.task_name = task_name
-        self.id_task_status = id_task_status
-        self.owner = id_user
 
     def __setattr__(self, att, value):
         self.__dict__[att] = value

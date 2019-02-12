@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, DateTime, String
+from sqlalchemy import Integer,Date , String
 from database import db
 
 
@@ -10,7 +10,7 @@ class User(db.Model):
     password = db.Column(String(128))
     name = db.Column(String(100),nullable=False)
     lastname = db.Column(String(80), nullable=False)
-    birthday = db.Column(DateTime,nullable=False)
+    birthday = db.Column(Date, nullable=False)
 
 
     def __setattr__(self, att, value):
